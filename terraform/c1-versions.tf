@@ -11,7 +11,7 @@ terraform {
 
 # Provider Block
 provider "aws" {
-    profile = "your_own_credential"
+    profile = "your_own_credential"   # Use your own credentials
     region = var.aws_region
 }
 
