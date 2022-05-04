@@ -1,0 +1,9 @@
+---
+    - name: Install {{ item }} package   # Use item for loop
+      yum:
+        name: "{{ item }}"
+        state: present
+      become: true          
+      loop: 
+        - php
+        - mysql

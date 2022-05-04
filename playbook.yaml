@@ -1,0 +1,39 @@
+- 
+  name: First Playbook to Web Servers
+  hosts: web_servers
+  vars:
+    packages:  # Conditionals in Loops
+      - name: httpd
+        required: True
+  roles:
+    - php
+  tasks: 
+    - name: Servers ping internet websites
+      command: ping {{ item }} -c 1  # item in the loop
+      loop:  # loop is the successor of with_*
+        - google.co.nz
+        - bing.co.nz
+        - www.baidu.com
+    - name: Upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+      become: True          
+    - name: Install {{ item.name }} package   # Use item for loop
+      yum:
+        name: "{{ item.name }}"
+        state: present
+      when: item.required == True # Conditionals in Loops
+      loop: "{{ packages }}" # Conditionals in Loops
+      become: True          
+    - name: Start httpd service and enable it
+      service:
+        name: httpd
+        state: started
+        enabled: True
+      become: True
+    - name: Copy web page on the server
+      copy:
+        src: 'index.html'
+        dest: '/var/www/html/index.html'
+      become: True
